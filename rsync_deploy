@@ -1,0 +1,31 @@
+#!/bin/bash
+
+export DEFAULT_AWS_KEY_PATH=../aws.pem
+
+if [ ! $AWS_KEY_PATH ]; then
+  echo AWS_KEY_PATH variable not found
+  echo Using default path: $DEFAULT_AWS_KEY_PATH
+  export AWS_KEY_PATH=$DEFAULT_AWS_KEY_PATH
+fi
+echo AWS_KEY_PATH=$AWS_KEY_PATH
+
+# update files on remote
+ERRORSTRING="Cannot push files. Please make sure you've indicated correct parameters"
+
+if [ $# -eq 0 ]
+    then
+        echo $ERRORSTRING;
+elif [ $1 == "live" ]
+    then
+        if [[ -z $2 ]]
+            then
+                echo "Running dry-run"
+                rsync --dry-run -az --force --delete --progress --exclude-from=rsync_exclude.txt -e "ssh -p22 -i $AWS_KEY_PATH" ./ ubuntu@$AWS_HOST:~/soundmates
+        elif [ $2 == "go" ]
+            then
+                echo "Running actual deploy"
+                rsync -az --force --delete --progress --exclude-from=rsync_exclude.txt -e "ssh -p22 -i $AWS_KEY_PATH" ./ ubuntu@$AWS_HOST:~/soundmates
+        else
+            echo $ERRORSTRING;
+        fi
+fi

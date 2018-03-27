@@ -1,0 +1,26 @@
+#!/bin/bash
+
+export DEFAULT_AWS_HOST=18.195.63.22
+
+if [[ $AWS_HOST ]]; then
+  echo AWS_HOST=$AWS_HOST
+else
+  echo AWS_HOST variable not found
+  if [[ DEFAULT_AWS_HOST ]]; then
+    AWS_HOST=$DEFAULT_AWS_HOST
+  else
+    echo Please enter AWS address:
+    read AWS_HOST
+  fi
+fi
+
+DEFAULT_AWS_KEY_PATH=../aws.pem
+
+if [ ! $AWS_KEY_PATH ]; then
+  echo AWS_KEY_PATH variable not found
+  echo Using default path: $DEFAULT_AWS_KEY_PATH
+  export AWS_KEY_PATH=$DEFAULT_AWS_KEY_PATH
+fi
+echo AWS_KEY_PATH=$AWS_KEY_PATH
+
+ssh -i "../aws.pem" ubuntu@$AWS_HOST
