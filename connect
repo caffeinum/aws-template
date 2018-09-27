@@ -1,13 +1,13 @@
 #!/bin/bash
 
-export DEFAULT_AWS_HOST=18.195.63.22
+export DEFAULT_AWS_HOST=ec2-35-157-10-69.eu-central-1.compute.amazonaws.com
 
 if [[ $AWS_HOST ]]; then
   echo AWS_HOST=$AWS_HOST
 else
   echo AWS_HOST variable not found
   if [[ DEFAULT_AWS_HOST ]]; then
-    AWS_HOST=$DEFAULT_AWS_HOST
+    export AWS_HOST=$DEFAULT_AWS_HOST
   else
     echo Please enter AWS address:
     read AWS_HOST
